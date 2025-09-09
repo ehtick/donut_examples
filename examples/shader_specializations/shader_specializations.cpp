@@ -105,7 +105,8 @@ public:
                 psoDesc.primType = nvrhi::PrimitiveType::TriangleList;
                 psoDesc.renderState.depthStencilState.depthTestEnable = false;
 
-                nvrhi::GraphicsPipelineHandle pipeline = device->createGraphicsPipeline(psoDesc, framebuffer);
+                nvrhi::GraphicsPipelineHandle pipeline = device->createGraphicsPipeline(psoDesc,
+                    framebuffer->getFramebufferInfo());
                 assert(pipeline);
 
                 m_Pipelines.push_back(pipeline);

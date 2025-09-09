@@ -310,7 +310,7 @@ public:
         return true;
     }
 
-    bool LoadScenePipelines(nvrhi::IFramebuffer* gBufferFramebuffer,nvrhi::IFramebuffer* backBufferFramebuffer)
+    bool LoadScenePipelines(nvrhi::FramebufferInfoEx const& fbinfo)
     {
         std::filesystem::path appShaderPath = app::GetDirectoryWithExecutable() / "shaders/work_graphs_d3d12" /  app::GetShaderTypeName(GetDevice()->getGraphicsAPI());
         
@@ -367,7 +367,7 @@ public:
             psoGfxDesc.VS = gbuffer_vertexShader;
             psoGfxDesc.PS = gbuffer_pixelShader;
 
-            m_GBufferFillPSO = GetDevice()->createGraphicsPipeline(psoGfxDesc, gBufferFramebuffer);
+            m_GBufferFillPSO = GetDevice()->createGraphicsPipeline(psoGfxDesc, fbinfo);
         }
 
         nvrhi::ComputePipelineDesc psoCSDesc;
@@ -380,7 +380,7 @@ public:
 
         // Create the culled lights buffer.
         {
-            uint2 framebufferSize = uint2(gBufferFramebuffer->getFramebufferInfo().width, gBufferFramebuffer->getFramebufferInfo().height);
+            uint2 framebufferSize = uint2(fbinfo.width, fbinfo.height);
             const uint32_t tileCount = GetLightTileCount(framebufferSize.x, framebufferSize.y);
 
             nvrhi::BufferDesc bufferDesc;
@@ -485,7 +485,7 @@ public:
         return true;
     }
 
-    bool LoadWorkGraphPipelines(nvrhi::IFramebuffer* framebuffer)
+    bool LoadWorkGraphPipelines(nvrhi::FramebufferInfoEx const& fbinfo)
     {
         std::filesystem::path appShaderPath = app::GetDirectoryWithExecutable() / "shaders/work_graphs_d3d12" /  app::GetShaderTypeName(GetDevice()->getGraphicsAPI());
         
@@ -500,7 +500,7 @@ public:
 
         ID3D12Device *device = GetDevice()->getNativeObject(nvrhi::ObjectTypes::D3D12_Device);
         ID3D12RootSignature *rootSignature = m_ShadePSO->getNativeObject(nvrhi::ObjectTypes::D3D12_RootSignature);
-        uint2 framebufferSize = uint2(framebuffer->getFramebufferInfo().width, framebuffer->getFramebufferInfo().height);
+        uint2 framebufferSize = uint2(fbinfo.width, fbinfo.height);
 
         ComPtr<ID3D12Device5> deviceD3D12;
         device->QueryInterface(IID_PPV_ARGS(&deviceD3D12));
@@ -831,8 +831,8 @@ public:
         {
             m_RenderTargets = std::make_unique<RenderTargets>(GetDevice(), int2(fbinfo.width, fbinfo.height));
 
-            LoadScenePipelines(m_RenderTargets->m_FrameBufferGB, framebuffer);
-            LoadWorkGraphPipelines(m_RenderTargets->m_FrameBufferGB);
+            LoadScenePipelines(m_RenderTargets->m_FrameBufferGB->getFramebufferInfo());
+            LoadWorkGraphPipelines(m_RenderTargets->m_FrameBufferGB->getFramebufferInfo());
         }
 
         // Reset GPU timers.

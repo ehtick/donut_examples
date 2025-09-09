@@ -221,7 +221,7 @@ public:
             pipelineDesc.renderState.depthStencilState.depthFunc = nvrhi::ComparisonFunc::GreaterOrEqual;
             pipelineDesc.renderState.rasterState.frontCounterClockwise = true;
             pipelineDesc.renderState.rasterState.setCullBack();
-            m_GraphicsPipeline = GetDevice()->createGraphicsPipeline(pipelineDesc, m_Framebuffers[fbindex]);
+            m_GraphicsPipeline = GetDevice()->createGraphicsPipeline(pipelineDesc, m_Framebuffers[fbindex]->getFramebufferInfo());
         }
 
         nvrhi::Viewport windowViewport(float(fbinfo.width), float(fbinfo.height));

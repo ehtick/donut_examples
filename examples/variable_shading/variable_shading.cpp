@@ -320,6 +320,7 @@ public:
         if (!m_shadingRateSurface)
         {
             nvrhi::TextureDesc desc;
+            desc.debugName = "ShadingRateTexture";
             desc.width = surfaceDimensions.x;
             desc.height = surfaceDimensions.y;
             desc.isRenderTarget = false;
