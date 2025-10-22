@@ -223,6 +223,8 @@ public:
         GBufferRenderTargets::Clear(commandList);
 
         commandList->clearTextureFloat(HdrColor, nvrhi::AllSubresources, nvrhi::Color(0.f));
+        commandList->clearTextureFloat(LdrColor, nvrhi::AllSubresources, nvrhi::Color(0.f));
+        commandList->clearTextureFloat(ResolvedColor, nvrhi::AllSubresources, nvrhi::Color(0.f));
     }
 };
 
