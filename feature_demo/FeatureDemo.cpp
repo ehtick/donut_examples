@@ -845,9 +845,14 @@ public:
         if (m_DLSS)
         {
             dm::uint2 size = m_RenderTargets->GetSize();
-            m_DLSS->SetRenderSize(size.x, size.y, size.x, size.y);
+            donut::render::DLSS::InitParameters initParameters = {};
+            initParameters.inputWidth = size.x;
+            initParameters.inputHeight = size.y;
+            initParameters.outputWidth = size.x;
+            initParameters.outputHeight = size.y;
+            m_DLSS->Init(initParameters);
             
-            m_ui.DlssAvailable = m_DLSS->IsAvailable();
+            m_ui.DlssAvailable = m_DLSS->IsDlssInitialized();
         }
 #endif
 
@@ -1089,7 +1094,7 @@ public:
 #if DONUT_WITH_DLSS
             if (m_ui.AntiAliasingMode == AntiAliasingMode::DLSS)
             {
-                if (m_DLSS && m_DLSS->IsAvailable() && !IsStereo())
+                if (m_DLSS && m_DLSS->IsDlssInitialized() && !IsStereo())
                 {
                     auto planarView = std::dynamic_pointer_cast<donut::engine::PlanarView>(m_View);
                     assert(planarView);
